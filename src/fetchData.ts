@@ -2,8 +2,8 @@ import { faker } from '@faker-js/faker'
 import axios from 'axios'
 
 const API_LOCATION = "http://127.0.0.1:5030";
-const HARDCODED_FILE_LOCATION = "http://127.0.0.1:5030/";
-const HARDCODED_FILE_LOCATION_REPLACE_REGEX = "\/Users\/user\/Projects\/querynits\/telegram-scraper\/";
+const HARDCODED_FILE_LOCATION = "http://127.0.0.1:5030/files";
+const HARDCODED_FILE_LOCATION_REPLACE_REGEX = /^.*\/files/;
 
 export type Data = {
   id: string
@@ -117,11 +117,16 @@ export async function fetchData(options: {
   // console.log(JSON.stringify(dataSec.data));
 
   const dataToShow = dataSec.data.data.map(dataPoint => {
-    if (dataPoint.hasOwnProperty('tg_file_path')) {
-      const current = dataPoint['tg_file_path'];
+    let dataCopy = {...dataPoint};
+
+    // console.log(`copy=${JSON.stringify(dataCopy)}`);
+    if (dataCopy.hasOwnProperty('tg_file_path')) {
+      let current =dataCopy['tg_file_path'][0];
       console.log(`current=${current}`);
-      // dataPoint['tg_file_path'] = current.replace(HARDCODED_FILE_LOCATION_REPLACE_REGEX, HARDCODED_FILE_LOCATION);
-      dataPoint['tg_file_path'] = current;
+      let resultRepl = current.replace(HARDCODED_FILE_LOCATION_REPLACE_REGEX, HARDCODED_FILE_LOCATION);
+      console.log(`resultRepl =${resultRepl}`);
+      console.log(`current2=${current}`);
+      dataPoint['tg_file_path'] = resultRepl;
     }
 
     return dataPoint;
