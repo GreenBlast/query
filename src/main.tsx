@@ -60,6 +60,7 @@ function App() {
       {
         accessorKey: 'tg_file_path',
         header: () => <span>tg_file_path</span>,
+        cell: info => <a href="url">{info.getValue()}</a>
       },
     ],
     []

@@ -1,4 +1,9 @@
 import { faker } from '@faker-js/faker'
+import axios from 'axios'
+
+const API_LOCATION = "http://127.0.0.1:5030";
+const HARDCODED_FILE_LOCATION = "http://127.0.0.1:5030/";
+const HARDCODED_FILE_LOCATION_REPLACE_REGEX = "\/Users\/user\/Projects\/querynits\/telegram-scraper\/";
 
 export type Data = {
   id: string
@@ -79,7 +84,6 @@ const data =
         "tg_chat_id": 101,
         "tg_msg": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum",
         "tg_is_photo": false,
-        "tg_file_path": "/path/to/file2"
       },
       {
         "id": "3",
@@ -98,14 +102,36 @@ export async function fetchData(options: {
   pageSize: number,
 }) {
   // Simulate some network latency
-  await new Promise(r => setTimeout(r, 500))
-  console.log("Testing here");
+  // await new Promise(r => setTimeout(r, 500))
+
+  const config = {
+    method: 'get',
+    url: `${API_LOCATION}/tg_msgs_raw?page=${options.pageIndex}&per_page=${options.pageSize}`,
+    headers: { }
+  };
+
+  const dataSec  = await axios(config)
+      .catch(function (error) {
+        console.log(error);
+      });
+  // console.log(JSON.stringify(dataSec.data));
+
+  const dataToShow = dataSec.data.data.map(dataPoint => {
+    if (dataPoint.hasOwnProperty('tg_file_path')) {
+      const current = dataPoint['tg_file_path'];
+      console.log(`current=${current}`);
+      // dataPoint['tg_file_path'] = current.replace(HARDCODED_FILE_LOCATION_REPLACE_REGEX, HARDCODED_FILE_LOCATION);
+      dataPoint['tg_file_path'] = current;
+    }
+
+    return dataPoint;
+
+  });
+
 
   return {
-    rows: data.slice(
-      options.pageIndex * options.pageSize,
-      (options.pageIndex + 1) * options.pageSize
-    ),
-    pageCount: Math.ceil(data.length / options.pageSize),
+    rows: dataToShow,
+    pageCount: dataSec.data.page_count,
   }
 }
+
