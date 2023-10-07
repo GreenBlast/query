@@ -1,5 +1,16 @@
 import { faker } from '@faker-js/faker'
 
+export type Data = {
+  id: string
+  tg_id: number
+  tg_date: string
+  tg_chat: string
+  tg_chat_id: number
+  tg_msg?: string
+  tg_is_photo?: boolean
+  tg_file_path?: string
+}
+
 export type Person = {
   firstName: string
   lastName: string
@@ -47,27 +58,48 @@ export function makeData(...lens: number[]) {
   return makeDataLevel()
 }
 
-const data = makeData(10000)
+// const data = makeData(10000)
+const data =
+    [
+      {
+        "id": "1",
+        "tg_id": 123,
+        "tg_date": "2023-10-07",
+        "tg_chat": "Chat 1",
+        "tg_chat_id": 456,
+        "tg_msg": "Hello, world!",
+        "tg_is_photo": true,
+        "tg_file_path": "/path/to/file1"
+      },
+      {
+        "id": "2",
+        "tg_id": 789,
+        "tg_date": "2023-10-08",
+        "tg_chat": "Chat 2",
+        "tg_chat_id": 101,
+        "tg_msg": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum",
+        "tg_is_photo": false,
+        "tg_file_path": "/path/to/file2"
+      },
+      {
+        "id": "3",
+        "tg_id": 456,
+        "tg_date": "2023-10-09",
+        "tg_chat": "Chat 3",
+        "tg_chat_id": 303,
+        "tg_msg": "Another message here.",
+        "tg_is_photo": true,
+        "tg_file_path": "/path/to/file3"
+      }
+    ]
 
 export async function fetchData(options: {
   pageIndex: number,
   pageSize: number,
-  cursor: string,
 }) {
   // Simulate some network latency
   await new Promise(r => setTimeout(r, 500))
   console.log("Testing here");
-
-
-  let cursorData = {
-    lastPage: options.pageIndex,
-  }
-
-// Step 1: Convert the object to a JSON string
-  const jsonString = JSON.stringify(cursorData);
-
-// Step 2: Encode the JSON string to Base64
-  const base64String = btoa(jsonString);
 
   return {
     rows: data.slice(
@@ -75,6 +107,5 @@ export async function fetchData(options: {
       (options.pageIndex + 1) * options.pageSize
     ),
     pageCount: Math.ceil(data.length / options.pageSize),
-    cursor: base64String
   }
 }

@@ -15,7 +15,7 @@ import {
 
 //
 
-import { fetchData, Person } from './fetchData'
+import { fetchData, Person, Data } from './fetchData'
 
 const queryClient = new QueryClient()
 
@@ -27,56 +27,39 @@ function App() {
   let debugModeData2 = null;
 
 
-  const columns = React.useMemo<ColumnDef<Person>[]>(
+  const columns = React.useMemo<ColumnDef<Data>[]>(
     () => [
       {
-        header: 'Name',
-        footer: props => props.column.id,
-        columns: [
-          {
-            accessorKey: 'firstName',
-            cell: info => info.getValue(),
-            footer: props => props.column.id,
-          },
-          {
-            accessorFn: row => row.lastName,
-            id: 'lastName',
-            cell: info => info.getValue(),
-            header: () => <span>last name</span>,
-            footer: props => props.column.id,
-          },
-        ],
+        accessorKey: 'id',
+        header: () => <span>id</span>,
       },
       {
-        header: 'Info',
-        footer: props => props.column.id,
-        columns: [
-          {
-            accessorKey: 'age',
-            header: () => 'Age',
-            footer: props => props.column.id,
-          },
-          {
-            header: 'More Info',
-            columns: [
-              {
-                accessorKey: 'visits',
-                header: () => <span>Visits</span>,
-                footer: props => props.column.id,
-              },
-              {
-                accessorKey: 'status',
-                header: 'Status',
-                footer: props => props.column.id,
-              },
-              {
-                accessorKey: 'progress',
-                header: 'Profile Progress',
-                footer: props => props.column.id,
-              },
-            ],
-          },
-        ],
+        accessorKey: 'tg_id',
+        header: () => <span>tg_id</span>,
+      },
+      {
+        accessorKey: 'tg_date',
+        header: () => <span>tg_date</span>,
+      },
+      {
+        accessorKey: 'tg_chat',
+        header: () => <span>tg_chat</span>,
+      },
+      {
+        accessorKey: 'tg_chat_id',
+        header: () => <span>tg_chat_id</span>,
+      },
+      {
+        accessorKey: 'tg_msg',
+        header: () => <span>tg_msg</span>,
+      },
+      {
+        accessorKey: 'tg_is_photo',
+        header: () => <span>tg_is_photo</span>,
+      },
+      {
+        accessorKey: 'tg_file_path',
+        header: () => <span>tg_file_path</span>,
       },
     ],
     []
@@ -233,7 +216,7 @@ function App() {
             table.setPageSize(Number(e.target.value))
           }}
         >
-          {[10, 20, 30, 40, 50].map(pageSize => (
+          {[1, 10, 20, 30, 40, 50].map(pageSize => (
             <option key={pageSize} value={pageSize}>
               Show {pageSize}
             </option>
